@@ -76,6 +76,17 @@ class PropertyRepository:
         result = await self.db.execute(stmt)
         return result.scalar()
 
+    async def count_total(self) -> int:
+        stmt = select(func.count(Property.id)).where(Property.is_deleted.is_(False))
+        return (await self.db.execute(stmt)).scalar_one()
+
+    async def count_by_validation(self, validation: str) -> int:
+        stmt = (
+            select(func.count(Property.id))
+            .where(Property.is_deleted.is_(False), Property.validation == validation)
+        )
+        return (await self.db.execute(stmt)).scalar_one()
+
     async def list(
         self,
         filters: PropertyFilter,
