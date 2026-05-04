@@ -31,6 +31,35 @@ class PropertyValidationStatus(str, enum.Enum):
     VALIDATED = "Validée"
 
 
+class PropertyType(str, enum.Enum):
+    APPARTEMENT = "Appartement"
+    VILLA = "Villa"
+    TERRAIN = "Terrain"
+    LOCAL = "Local"
+
+
+class PropertySubType(str, enum.Enum):
+    # Appartement
+    STUDIO = "Studio"
+    S_PLUS_1 = "S+1"
+    S_PLUS_2 = "S+2"
+    S_PLUS_3 = "S+3"
+    S_PLUS_4 = "S+4"
+    S_PLUS_5 = "S+5"
+    DUPLEX = "Duplex"
+    PENTHOUSE = "Penthouse"
+    # Villa
+    VILLA_JUMELEE = "Villa jumelée"
+    VILLA_INDIVIDUELLE = "Villa individuelle"
+    # Terrain
+    TERRAIN_HABITATION = "Terrain habitation"
+    TERRAIN_AGRICULTURE = "Terrain agriculture"
+    TERRAIN_PROMOTION = "Terrain promotion"
+    # Local
+    LOCAL_COMMERCIAL = "Local commercial"
+    LOCAL_BUREAUTIQUE = "Local bureautique"
+
+
 class Property(UUIDPKMixin, TimestampMixin, Base):
     __tablename__ = "properties"
 
@@ -38,7 +67,10 @@ class Property(UUIDPKMixin, TimestampMixin, Base):
         String(32), unique=True, nullable=False, index=True
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    type: Mapped[str] = mapped_column(String(50), nullable=False)
+    type: Mapped[str] = mapped_column(
+        String(50), nullable=False
+    )  # Keep as string for now to support migration
+    sub_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
     status: Mapped[str] = mapped_column(
         String(50),
         nullable=False,
