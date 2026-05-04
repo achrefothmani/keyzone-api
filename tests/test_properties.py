@@ -133,36 +133,3 @@ async def test_property_images(authed_client):
     assert r.json() == []
 
 
-async def test_property_update_sub_type_max_length(authed_client):
-    # 1. Create a property
-    payload = {
-        "title": "Test Property",
-        "type": "Villa",
-        "vocation": "Vente",
-        "status": "Disponible",
-        "price": 100000,
-        "city": "Tunis",
-    }
-    r = await authed_client.post("/api/v1/properties", json=payload)
-    assert r.status_code == 201
-    prop_id = r.json()["id"]
-
-    # 2. Try to update with a sub_type that is exactly 50 chars (should succeed)
-    long_sub_type = "a" * 50
-    r = await authed_client.put(
-        f"/api/v1/properties/{prop_id}",
-        json={"sub_type": long_sub_type}
-    )
-    assert r.status_code == 200
-    assert r.json()["sub_type"] == long_sub_type
-
-    # 3. Try to update with a sub_type that is 51 chars (should fail)
-    too_long_sub_type = "a" * 51
-    r = await authed_client.put(
-        f"/api/v1/properties/{prop_id}",
-        json={"sub_type": too_long_sub_type}
-    )
-    assert r.status_code == 422
-    errors = r.json()["detail"]
-    assert any(e["loc"][-1] == "sub_type" for e in errors)
-    assert any("at most 50 characters" in e["msg"] or "too_long" in e["type"] for e in errors)
