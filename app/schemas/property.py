@@ -150,3 +150,25 @@ class PropertyFilter(BaseModel):
     search: str | None = None
     sort_by: str = Field(default="created_at", pattern="^(price|created_at|updated_at)$")
     sort_dir: str = Field(default="desc", pattern="^(asc|desc)$")
+
+
+class PublicPropertyOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    reference: str
+    title: str
+    type: str
+    sub_type: str | None = None
+    vocation: str
+    price: float
+    surface: float | None = None
+    rooms: int | None = None
+    bedrooms: int | None = None
+    bathrooms: int | None = None
+    floor: int | None = None
+    furnished: bool
+    description: str | None = None
+    city: str
+    neighborhood: str | None = None
+    postal_code: str | None = None
+    images: list[PropertyImageOut] = Field(default_factory=list)
