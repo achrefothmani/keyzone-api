@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import uuid
 from typing import TYPE_CHECKING, List
 
@@ -22,6 +23,12 @@ from app.models.mixins import TimestampMixin, UUIDPKMixin
 
 if TYPE_CHECKING:
     from app.models.user import User
+
+
+class PropertyValidationStatus(str, enum.Enum):
+    BROUILLON = "Brouillon"
+    PENDING = "En attente de validation"
+    VALIDATED = "Validée"
 
 
 class Property(UUIDPKMixin, TimestampMixin, Base):

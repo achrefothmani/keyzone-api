@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.property_repository import PropertyRepository
+from app.models.property import PropertyValidationStatus
 from app.schemas.stats import DashboardStats, DashboardKPI
 
 class StatsService:
@@ -9,7 +10,7 @@ class StatsService:
 
     async def get_dashboard_stats(self) -> DashboardStats:
         total = await self.property_repo.count_total()
-        pending = await self.property_repo.count_by_validation("En attente de validation")
+        pending = await self.property_repo.count_by_validation(PropertyValidationStatus.PENDING)
         
         return DashboardStats(
             total_properties=DashboardKPI(value=total),
