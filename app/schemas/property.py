@@ -114,7 +114,7 @@ class PropertyFilter(BaseModel):
     reference: str | None = None
     title: str | None = None
     type: str | None = None
-    sub_type: str | None = None
+    sub_type: str | None = Field(default=None, max_length=50)
     vocation: str | None = None
     status: str | None = None
     validation: str | None = None

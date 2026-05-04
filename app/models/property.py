@@ -70,7 +70,7 @@ class Property(UUIDPKMixin, TimestampMixin, Base):
     type: Mapped[str] = mapped_column(
         String(50), nullable=False
     )  # Keep as string for now to support migration
-    sub_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    sub_type: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
     status: Mapped[str] = mapped_column(
         String(50),
         nullable=False,
