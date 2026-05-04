@@ -21,6 +21,7 @@ class PropertyImageCreate(BaseModel):
 class PropertyBase(BaseModel):
     title: str = Field(min_length=1, max_length=255)
     type: str = Field(min_length=1, max_length=50)
+    sub_type: str | None = Field(default=None, max_length=50)
     status: str = Field(default="Disponible", min_length=1, max_length=50)
     vocation: str = Field(min_length=1, max_length=50)
     validation: str = Field(default="Brouillon", min_length=1, max_length=50)
@@ -53,6 +54,7 @@ class PropertyCreate(PropertyBase):
 class PropertyUpdate(BaseModel):
     title: str | None = None
     type: str | None = None
+    sub_type: str | None = None
     status: str | None = None
     vocation: str | None = None
     validation: str | None = None
@@ -112,6 +114,7 @@ class PropertyFilter(BaseModel):
     reference: str | None = None
     title: str | None = None
     type: str | None = None
+    sub_type: str | None = None
     vocation: str | None = None
     status: str | None = None
     validation: str | None = None
