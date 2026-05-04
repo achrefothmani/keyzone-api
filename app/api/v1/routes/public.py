@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, Query
+from sqlalchemy import func, select
 
 from app.api.deps import DBSession, get_property_filters
+from app.models.property import Property
 from app.schemas.common import Page
 from app.schemas.property import (
     PropertyFilter,
@@ -28,3 +30,13 @@ async def list_public_properties(
         limit=limit,
         offset=offset,
     )
+
+
+@router.get("/stats")
+async def get_public_stats(db: DBSession):
+    stmt = (
+        select(func.count(Property.id))
+        .where(Property.is_deleted.is_(False), Property.validation == "Validée")
+    )
+    total = (await db.execute(stmt)).scalar_one()
+    return {"total_validated": total}
