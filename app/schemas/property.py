@@ -54,7 +54,7 @@ class PropertyCreate(PropertyBase):
 class PropertyUpdate(BaseModel):
     title: str | None = None
     type: str | None = None
-    sub_type: str | None = None
+    sub_type: str | None = Field(default=None, max_length=50)
     status: str | None = None
     vocation: str | None = None
     validation: str | None = None
