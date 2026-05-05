@@ -69,3 +69,27 @@ async def test_public_properties_filtering(
     data = response.json()
     assert any(p["reference"] == "FILT001" for p in data["items"])
     assert not any(p["reference"] == "FILT002" for p in data["items"])
+
+@pytest.mark.asyncio
+async def test_public_properties_sub_type_filter(
+    client: AsyncClient, db: AsyncSession
+):
+    # Create two validated properties with different sub_types
+    p1 = Property(
+        reference="ST001", title="S1", type="Villa", vocation="Vente",
+        price=100, city="Tunis", validation="Validée", sub_type="Villa individuelle"
+    )
+    p2 = Property(
+        reference="ST002", title="S2", type="Villa", vocation="Vente",
+        price=200, city="Tunis", validation="Validée", sub_type="Villa jumelée"
+    )
+    db.add_all([p1, p2])
+    await db.commit()
+
+    # Filter by sub_type
+    response = await client.get("/api/v1/public/properties?sub_type=Villa+individuelle")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 1
+    assert data["items"][0]["reference"] == "ST001"
+    assert data["items"][0]["sub_type"] == "Villa individuelle"
