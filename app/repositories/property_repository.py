@@ -99,6 +99,7 @@ class PropertyRepository:
         # Dynamic mapping for filters
         exact_fields = {
             "type": Property.type,
+            "sub_type": Property.sub_type,
             "vocation": Property.vocation,
             "status": Property.status,
             "validation": Property.validation,
