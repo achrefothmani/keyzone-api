@@ -8,7 +8,9 @@ from app.schemas.property import (
     PropertyFilter,
     PublicPropertyOut,
 )
+from app.schemas.visit_request import VisitRequestCreate, VisitRequestOut
 from app.services.property_service import PropertyService
+from app.services.visit_request_service import VisitRequestService
 
 router = APIRouter(prefix="/public", tags=["public"])
 
@@ -43,6 +45,15 @@ async def get_public_property_by_reference(
             detail="Property not found or not validated"
         )
     return PublicPropertyOut.model_validate(prop)
+
+
+@router.post("/visit-requests", response_model=VisitRequestOut)
+async def create_visit_request(
+    db: DBSession,
+    payload: VisitRequestCreate
+) -> VisitRequestOut:
+    request = await VisitRequestService(db).create(payload)
+    return VisitRequestOut.model_validate(request)
 
 
 @router.get("/stats")
