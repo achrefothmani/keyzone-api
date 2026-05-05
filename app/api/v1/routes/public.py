@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy import func, select
 
 from app.api.deps import DBSession, get_property_filters
@@ -30,6 +30,19 @@ async def list_public_properties(
         limit=limit,
         offset=offset,
     )
+
+
+@router.get("/properties/{reference}", response_model=PublicPropertyOut)
+async def get_public_property_by_reference(
+    reference: str, db: DBSession
+) -> PublicPropertyOut:
+    prop = await PropertyService(db).get_by_reference(reference)
+    if prop.validation != "Validée":
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Property not found or not validated"
+        )
+    return PublicPropertyOut.model_validate(prop)
 
 
 @router.get("/stats")

@@ -116,6 +116,12 @@ class PropertyService:
     async def get(self, property_id: UUID | str) -> Property:
         return await self._get_or_404(property_id)
 
+    async def get_by_reference(self, reference: str) -> Property:
+        prop = await self.repo.get_by_reference(reference)
+        if not prop:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "Property not found")
+        return prop
+
     async def list_history(self, property_id: UUID) -> list[PropertyHistory]:
         await self._get_or_404(property_id)
         return await self.repo.list_history(property_id)

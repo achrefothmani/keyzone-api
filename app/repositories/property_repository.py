@@ -35,6 +35,14 @@ class PropertyRepository:
         
         return (await self.db.execute(stmt)).scalar_one_or_none()
 
+    async def get_by_reference(self, reference: str) -> Property | None:
+        stmt = (
+            select(Property)
+            .where(Property.reference == reference, Property.is_deleted.is_(False))
+            .options(selectinload(Property.images))
+        )
+        return (await self.db.execute(stmt)).scalar_one_or_none()
+
     async def list_history(self, property_id: UUID) -> list[PropertyHistory]:
         stmt = (
             select(PropertyHistory)
