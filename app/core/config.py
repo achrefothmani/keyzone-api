@@ -40,12 +40,12 @@ class Settings(BaseSettings):
             "http://127.0.0.1:3002",
         ]
     )
-    EMAIL_DOMAIN: str = "keyzonestates.tn"
+    EMAIL_DOMAIN: str = "keyzonestates.com"
     UPLOAD_DIR: str = "uploads"
     PORT: int = 8009
-    BASE_URL: str = f"http://localhost:{PORT}"
+    BASE_URL: str = Field(default=f"http://localhost:8009")
 
-    FIRST_SUPERUSER_EMAIL: str = "admin@keyzonestates.tn"
+    FIRST_SUPERUSER_EMAIL: str = "admin@keyzonestates.com"
     FIRST_SUPERUSER_PASSWORD: str = "admin-password"
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")

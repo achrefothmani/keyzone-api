@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class PropertyImageOut(BaseModel):
@@ -11,6 +11,25 @@ class PropertyImageOut(BaseModel):
     url: str
     is_cover: bool
     created_at: datetime
+
+    @field_validator("url")
+    @classmethod
+    def upgrade_to_https(cls, v: str) -> str:
+        # Handle production domains and direct IP access
+        if any(v.startswith(prefix) for prefix in [
+            "http://api.keyzonestates.com",
+            "http://keyzonestates.com",
+            "http://www.keyzonestates.com",
+            "http://162.19.228.222"
+        ]):
+            # Replace the entire origin with the secure API domain
+            if "://" in v:
+                path = v.split("://", 1)[1]
+                if "/" in path:
+                    actual_path = path.split("/", 1)[1]
+                    return f"https://api.keyzonestates.com/{actual_path}"
+                return f"https://api.keyzonestates.com"
+        return v
 
 
 class PropertyImageCreate(BaseModel):
