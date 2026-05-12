@@ -20,6 +20,7 @@ class PropertyImageOut(BaseModel):
             "http://api.keyzonestates.com",
             "http://keyzonestates.com",
             "http://www.keyzonestates.com",
+            "http://umami.keyzonestates.com",
             "http://162.19.228.222"
         ]):
             # Replace the entire origin with the secure API domain

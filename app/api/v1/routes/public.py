@@ -52,7 +52,7 @@ async def create_visit_request(
     db: DBSession,
     payload: VisitRequestCreate
 ) -> VisitRequestOut:
-    request = await VisitRequestService(db).create(payload)
+    request = await VisitRequestService(db).create(payload, source="website")
     return VisitRequestOut.model_validate(request)
 
 

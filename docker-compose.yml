@@ -36,7 +36,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-realestate}
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
-      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-'["http://localhost:3000","http://localhost:3001","http://localhost:3002","http://localhost:8080","http://127.0.0.1:3000","http://127.0.0.1:3001","http://127.0.0.1:3002"]'}
+      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-'["http://localhost:3000","http://localhost:3001","http://localhost:3002","http://localhost:8080","http://127.0.0.1:3000","http://127.0.0.1:3001","http://127.0.0.1:3002","https://umami.keyzonestates.com"]'}
       EMAIL_DOMAIN: ${EMAIL_DOMAIN:-keyzonestates.tn}
     ports:
       - "8009:8009"
