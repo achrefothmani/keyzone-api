@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 
 
 class VisitRequest(UUIDPKMixin, TimestampMixin, Base):
+    """
+    Represents a request for a property visit.
+    """
     __tablename__ = "requests"
 
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -22,10 +25,10 @@ class VisitRequest(UUIDPKMixin, TimestampMixin, Base):
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     property_reference: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
 
-    assigned_user_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    assigned_user_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     visit_date: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
-    source: Mapped[str] = mapped_column(String(32), default="website", nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="pending", server_default="pending", nullable=False)
+    source: Mapped[str] = mapped_column(String(32), default="website", server_default="website", nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     assigned_user: Mapped[User | None] = relationship("User")
