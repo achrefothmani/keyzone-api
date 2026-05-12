@@ -11,9 +11,20 @@ class VisitRequestBase(BaseModel):
 class VisitRequestCreate(VisitRequestBase):
     pass
 
+class VisitRequestUpdate(BaseModel):
+    assigned_user_id: UUID | None = None
+    visit_date: datetime | None = None
+    status: str | None = None
+    notes: str | None = None
+
 class VisitRequestOut(VisitRequestBase):
     id: UUID
     created_at: datetime
+    assigned_user_id: UUID | None
+    visit_date: datetime | None
+    status: str
+    source: str
+    notes: str | None
 
     class Config:
         from_attributes = True
