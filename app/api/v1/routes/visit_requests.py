@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 
 from app.api.deps import CurrentUser, DBSession
 from app.schemas.common import Page
@@ -32,3 +32,10 @@ async def update_visit_request(
 ) -> VisitRequestOut:
     item = await VisitRequestService(db).update(id, payload)
     return VisitRequestOut.model_validate(item)
+
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_visit_request(
+    id: UUID, db: DBSession, _: CurrentUser
+) -> None:
+    await VisitRequestService(db).delete(id)

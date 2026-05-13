@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from app.schemas.user import UserOut
 
 
 class VisitRequestBase(BaseModel):
@@ -29,6 +30,7 @@ class VisitRequestOut(VisitRequestBase):
     created_at: datetime
     updated_at: datetime
     assigned_user_id: UUID | None
+    assigned_user: UserOut | None = None
     visit_date: datetime | None
     status: str
     source: str

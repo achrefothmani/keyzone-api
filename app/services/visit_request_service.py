@@ -14,6 +14,7 @@ class VisitRequestService:
         request = VisitRequest(**payload.model_dump(), source=source)
         await self.repo.create(request)
         await self.db.commit()
+        await self.db.refresh(request)
         return request
 
     async def list(self, limit: int = 20, offset: int = 0) -> tuple[list[VisitRequest], int]:
@@ -25,4 +26,12 @@ class VisitRequestService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Visit request not found")
         await self.repo.update(request, payload.model_dump(exclude_unset=True))
         await self.db.commit()
+        await self.db.refresh(request)
         return request
+
+    async def delete(self, id: UUID) -> None:
+        request = await self.repo.get(id)
+        if not request:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Visit request not found")
+        await self.repo.delete(request)
+        await self.db.commit()

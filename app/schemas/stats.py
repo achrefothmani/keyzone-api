@@ -10,3 +10,5 @@ class DashboardKPI(BaseModel):
 class DashboardStats(BaseModel):
     total_properties: DashboardKPI
     pending_validation: DashboardKPI
+    scheduled_visits: DashboardKPI
+    property_views: DashboardKPI

@@ -48,6 +48,9 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_EMAIL: str = "admin@keyzonestates.com"
     FIRST_SUPERUSER_PASSWORD: str = "admin-password"
 
+    UMAMI_DATABASE_URL: str | None = None
+    UMAMI_WEBSITE_ID: str | None = None
+
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
     def _parse_cors(cls, v):
@@ -76,6 +79,14 @@ class Settings(BaseSettings):
             f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
+
+    @property
+    def async_umami_database_url(self) -> str | None:
+        if not self.UMAMI_DATABASE_URL:
+            return None
+        if "+asyncpg" in self.UMAMI_DATABASE_URL:
+            return self.UMAMI_DATABASE_URL
+        return self.UMAMI_DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
 
 @lru_cache
