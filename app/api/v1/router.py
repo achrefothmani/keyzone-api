@@ -8,6 +8,7 @@ from app.api.v1.routes import (
     stats,
     users,
     visit_requests,
+    notifications,
 )
 
 api_router = APIRouter()
@@ -18,3 +19,4 @@ api_router.include_router(images.router)
 api_router.include_router(stats.router)
 api_router.include_router(visit_requests.router)
 api_router.include_router(public.router)
+api_router.include_router(notifications.router)

@@ -61,6 +61,11 @@ class UserRepository:
         total = (await self.db.execute(count_stmt)).scalar_one()
         return list(items), int(total)
 
+    async def get_users_by_roles(self, roles: list[UserRole]) -> list[User]:
+        stmt = select(User).where(User.role.in_(roles), User.is_active == True)
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())
+
     async def add(self, user: User) -> User:
         self.db.add(user)
         await self.db.flush()

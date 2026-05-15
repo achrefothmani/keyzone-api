@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models.property import Property, PropertyHistory, PropertyImage
 from app.models.user import User, UserRole
+from app.models.notification import NotificationType
 from app.repositories.property_repository import ImageRepository, PropertyRepository
 from app.repositories.user_repository import UserRepository
 from app.schemas.property import (
@@ -20,6 +21,8 @@ from app.schemas.property import (
     PropertyImageCreate,
     PropertyUpdate,
 )
+from app.schemas.notification import NotificationCreate
+from app.services.notification_service import NotificationService
 from app.utils.reference import STARTING_REFERENCE_NUMBER, format_reference
 
 
@@ -29,6 +32,7 @@ class PropertyService:
         self.repo = PropertyRepository(db)
         self.user_repo = UserRepository(db)
         self.image_repo = ImageRepository(db)
+        self.notification_service = NotificationService(db)
 
     async def _validate_responsible(self, responsible_id: UUID | None) -> None:
         if responsible_id is None:
@@ -91,6 +95,21 @@ class PropertyService:
             try:
                 # TOCTOU mitigation: commit inside the loop and catch IntegrityError
                 await self.db.commit()
+
+                # Notify managers
+                managers = await self.user_repo.get_users_by_roles([UserRole.CHEF_AGENCE, UserRole.COORDINATEUR])
+                for manager in managers:
+                    if manager.id != current_user.id:
+                        await self.notification_service.create_notification(
+                            NotificationCreate(
+                                user_id=manager.id,
+                                title="Nouvelle propriété",
+                                message=f"Une nouvelle propriété a été ajoutée : {prop.reference}",
+                                type=NotificationType.PROPERTY_CREATED,
+                                link=f"/proprietes/{prop.id}"
+                            )
+                        )
+
                 return await self._get_or_404(prop.id)
             except IntegrityError:
                 await self.db.rollback()

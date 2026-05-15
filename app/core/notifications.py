@@ -24,4 +24,9 @@ class ConnectionManager:
             for connection in self.active_connections[user_id]:
                 await connection.send_json(message)
 
+    async def broadcast(self, message: dict):
+        for connections in self.active_connections.values():
+            for connection in connections:
+                await connection.send_json(message)
+
 notification_manager = ConnectionManager()
